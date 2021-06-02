@@ -1,6 +1,6 @@
 # autothrottle
 SC2021 AD/AE
-1. Hardware specifications of a target machine
+## 1. Hardware specifications of a target machine
 We utilize two hardware configurations for Micro- and Macro-benchmark evaluation
 
 	1) Micro-benchmark evaluation
@@ -16,7 +16,7 @@ We utilize two hardware configurations for Micro- and Macro-benchmark evaluation
 - Our evaluation requires multiple host servers, at least two for micro-benchmark and five for macro-benchmark evaluation. Also, the host servers should connect to either 40 GbE (micro-) or 10 GbE (macro-benchmark).
 - If the above hardware configuration is not available, there can be performance degradation.
 
-2. Module compile and installation
+## 2. Module compile and installation
 
 	1) Kernel compile and reboot
 	```console
@@ -41,7 +41,7 @@ We utilize two hardware configurations for Micro- and Macro-benchmark evaluation
 	./install.sh
 	```
 
-3. System configuration
+## 3. System configuration
 	1) Activate RFS (receive flow steering) and disable irqbalance to eliminate bottlenecks in network interfaces and interrupt processing ($INTERFACE indicates the network interfaces used for this experiment.)
 	```console
 	cd ~/autothrottle/script
@@ -53,7 +53,7 @@ We utilize two hardware configurations for Micro- and Macro-benchmark evaluation
 	2) Setting up a container environment
 	- Autothrottle supports containers to achieve predictable network performance. So, this evaluation requires a container environment based on Docker. To install Docker, please refer to https://docs.docker.com/get-docker/
 
-4. Micro-benchmark evaluation
+## 4. Micro-benchmark evaluation
 	1) Create containers for evaluation
 	
 	- Run containers on the target machine. The number of containers should be double the number of CPU cores. Each container is based on the latest Ubuntu image and we install Netperf benchmark inside the containers.
@@ -113,7 +113,7 @@ We utilize two hardware configurations for Micro- and Macro-benchmark evaluation
 	./run_netperf.sh $N $M
 	```
 	
-5. Macro-benchmark evaluation
+## 5. Macro-benchmark evaluation
 	
 	1) Memcached
 	- Create Memcached containers with the name $NAME
@@ -214,7 +214,7 @@ We utilize two hardware configurations for Micro- and Macro-benchmark evaluation
 		vim ./slave.yml
 		```
 		*Here, set spark-master (underneath extra_hosts) to the public IP address of the corresponding master server.
-Note that two yml files (e.g., slaves1.yml, slaves2.yml) are necessary to create two slave containers in the master server.
+		Note that two yml files (e.g., slaves1.yml, slaves2.yml) are necessary to create two slave containers in the master server.
 
 		- Containers in the target machine configuration: We create eight containers (i.e., spark slaves) in the target machine and every two slaves belong to the same master (e.g., s1 and s2 belong to m1 while s3 and s4 belong to m2 when m1 and m2 run on different master servers.) 
 		- So, we need to create eight slaves.yml (e.g., s1.yml, s2.yml….) as in the master servers. Also, each yml file should include spark-master and spark-worker IP addresses with IP address of the corresponding master server.
