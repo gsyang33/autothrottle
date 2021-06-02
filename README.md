@@ -112,3 +112,45 @@ We utilize two hardware configurations for Micro- and Macro-benchmark evaluation
 	```console
 	./run_netperf.sh $N $M
 	```
+	
+5. Macro-benchmark evaluation
+	
+	1) Memcached
+	- Create Memcached containers with the name $NAME
+	```console
+	sudo docker run -it --name $NAME ubuntu:16.04 /bin/bash
+	```
+	This attaches to the CLI of the memcached container. Install Memcached inside the container (Please refer to https://github.com/memcached/memcached/wiki/Install, https://www.memcached.org/downloads, https://github.com/memcached/memcached/wiki/ReleaseNotes1414 for more information)
+	```console
+	cd ~
+	apt-get update
+	apt-get install -y build-essential git wget vim libevent-dev
+	wget http://memcached.org/files/old/memcached-1.4.14.tar.gz
+	tar vxf memcached-1.4.14.tar.gz
+	cd memcached-1.4.14
+	./configure --prefix=/usr/local/memcached
+	make
+	make test
+	make install
+	```
+	- Install memaslap in the remote machine (Please refer to https://github.com/pgaref/memcached_benc for more information)
+	```console
+	cd ~
+	git clone https://github.com/pgaref/memcached_bench.git
+	cd ~/memcached_bench/libmemcached-1.0.15/
+	./configure --enable-memaslap
+	make
+	vim Makefile	//Add  “-lpthread -lm” to 'LIBS =')
+	apt-get install -y automake autoconf
+	make
+	make install
+	```
+	
+	- Add routing table information in the remote machine to forward packets to the Memcached containers on the target machine. $NET is the subnet of the containers such as 172.17.0.0/16 while $IFACE indicates the network interface connected to the target machine
+	```console
+	sudo route add -net $NET dev $IFACE
+	```
+	- Execute memaslap in the remote machine. $IP1, IP2 indicate the IP address of the memcached containers on the target machine
+	```console
+	~/memcached_bench/libmemcached-1.0.15/clients/memaslap -B -c 512 -s $IP1:11211,$IP2:11211,.... -t 60s
+	```
