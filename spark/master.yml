@@ -1,0 +1,27 @@
+version: "3.2"
+services:
+  spark-master:
+    container_name: spark-master
+    networks:
+      - br-n-spark
+    extra_hosts:
+      - spark-worker1a:10.0.0.24
+      - spark-worker2a:10.0.0.24
+      - spark-worker3a:10.0.0.200
+      - spark-worker4a:10.0.0.200
+      - spark-submit:172.42.0.5
+
+    image: spydernaz/spark-master:latest
+    ports:
+      - "9090:8080"
+      - "7077:7077"
+    volumes:
+       - ./apps:/opt/spark-apps
+       - ./data:/opt/spark-data
+    environment:
+        - "SPARK_MASTER_HOST=172.42.0.2"
+        - SPARK_LOCAL_IP=172.42.0.2
+        - SPARK_PUBLIC_DNS=10.0.0.200
+networks:
+   br-n-spark:
+     driver: bridge
