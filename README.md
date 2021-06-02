@@ -154,3 +154,91 @@ We utilize two hardware configurations for Micro- and Macro-benchmark evaluation
 	```console
 	~/memcached_bench/libmemcached-1.0.15/clients/memaslap -B -c 512 -s $IP1:11211,$IP2:11211,.... -t 60s
 	```
+	
+	2) Spark
+	- This evaluation requires five servers connected using a 10 GbE switch. Among five servers, four servers act as master servers while one left is a target machine.
+	a. Network setup (On every host machine)
+		- Create a local docker bridge network “dockersparkterasort_br-n-spark” with the first 24 bits subnet address $NET (e.g., 172.35.0 for 172.35.0.0/16, each machine should bave different subnet addresses). (Please refer to Https://docs.docker.com/engine/reference/commandline/network_create/ for more information)
+		```console
+		cd ~/autothrottle/script
+		chmod +x ./create_network.sh $NET
+		./create_network.sh
+		```
+		- Add routing tables to forward packets to others, when $IF indicates the name of the network interface connected to the 10 GbE switch. (In master servers, PS_IPADDR and PS_HOST_IPADDR are the IP address of the container bridge network and a 10 GbE network interface in the target machine. For the target machine, this should be iterated four times with PS_IPADDR and  PS_HOST_IPADDR of respective master servers.)
+		```console
+		vim ./route.sh
+		```
+		*Here, set PS_IPADDR to the public IP address of the container bridge network interface in the remote server. Set PS_HOST_IPADDR to the public IP address of the remote server.
+		```console
+		chmod +x ./route.sh
+		./route.sh $IF
+		```
+		
+	b. Data setup (On four master servers)
+		- Create folders for input/output data.
+		```console
+		cd ~/apps
+		mkdir data
+		cd ~/apps/data
+		mkdir terasort_in terasort_out
+		```
+		- Download input data to the folder terasort_in by following the instructions at: https://github.com/ehiggs/spark-terasort
+	 
+	c. Container setup
+	- Spark master container configuration (On four master servers)
+	```console 
+	cd ~/autothrottle/spark/docker/spark-submit
+	vim ./spark-submit.sh
+	```
+	*Here, set $IP to the IP address of the master server
+	```console 
+	cd ~/autothrottle/spark/docker/spark-master
+	vim ./start-master.sh
+	```
+	*Here, set SPARK_MASTER_HOST to the IP address of the master server
+	
+	- Build Docker container images (On every host servers)
+	```console  
+	cd ~/autothrottle/spark
+	chmod +x ./build-images.sh
+	./build-images.sh
+	```
+
+	- Configure container settings.
+		- Configure master and slave container settings (On four master servers)
+		```console
+		vim ./master.yml
+		```
+		*Here, set each spark-worker (underneath extra_hosts) to the local IP address of the corresponding worker container. Set SPARK_PUBLIC_DNS (underneath environment) to the public IP address of the target machine.
+		```console
+		vim ./slave.yml
+		```
+		*Here, set spark-master (underneath extra_hosts) to the public IP address of the corresponding master server.
+Note that two yml files (e.g., slaves1.yml, slaves2.yml) are necessary to create two slave containers in the master server.
+
+		- Containers in the target machine configuration: We create eight containers (i.e., spark slaves) in the target machine and every two slaves belong to the same master (e.g., s1 and s2 belong to m1 while s3 and s4 belong to m2 when m1 and m2 run on different master servers.) 
+		- So, we need to create eight slaves.yml (e.g., s1.yml, s2.yml….) as in the master servers. Also, each yml file should include spark-master and spark-worker IP addresses with IP address of the corresponding master server.
+
+	d. Running Spark
+	- Deploy and run master and slave containers (On four master servers).
+	```console
+	cd ~/autothrottle/spark
+	chmod +x ./start_master.sh
+	./start_master.sh
+	```
+	
+	- Deploy eight slave containers in the target machine.
+	```console
+	./start_slave.sh
+	```
+	
+	- Submit workload to cluster (On four master servers).
+	```console
+	vim submit.sh
+	```
+	*Here, set SPARK_DRIVER_HOST to the IP address of the master server.
+	
+	```console
+	chmod +x ./submit.sh
+	./submit.sh
+	```
