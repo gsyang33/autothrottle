@@ -36,7 +36,7 @@ make olddefconfig
 N=`getconf _NPROCESSORS_ONLN`
 make -j$N
 make modules_install install
-    reboot
+reboot
 ```	
 
 2) Module installation
