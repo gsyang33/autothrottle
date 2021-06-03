@@ -25,13 +25,14 @@ wget https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.4.58.tar.gz
 tar xzvf linux-5.4.58.tar.gz
 git clone
 cd autothrottle
-cp -rf ./kernel/* ~/linux-5.4.58/net/bridge/
-    cd ~/linux-5.4.58
-    cp /boot/config-$(uname -r) ./.config
-    make olddefconfig
-    N=`getconf _NPROCESSORS_ONLN`
-    make -j$N
-    make modules_install install
+cp -rf ./bridge/* ~/linux-5.4.58/net/bridge/
+cp -rf ./sched/* ~/linux-5.4.58/kernel/sched/
+cd ~/linux-5.4.58
+cp /boot/config-$(uname -r) ./.config
+make olddefconfig
+N=`getconf _NPROCESSORS_ONLN`
+make -j$N
+make modules_install install
     reboot
 ```	
 
