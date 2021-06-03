@@ -69,7 +69,7 @@ sh run_container.sh $N
 
 [Autothrottle]
 	
-- Assign the same bandwidth requirements ($GOAL) to all containers.
+- Assign the same bandwidth requirements ($GOAL) to all containers. (The unit of bandwidth requirements is Mbps. For example, if you want to configure 200 Mbps for containers, $GOAL is 200.) 
 ```console
 cd ~/autothrottle/script
 N=`getconf _NPROCESSORS_ONLN`
@@ -102,7 +102,7 @@ rmmod vif.ko
 sudo pip install tcconfig
 ```
 	
-- Configure the same network bandwidth ($GOAL) to the containers using tcset
+- Configure the same network bandwidth ($GOAL) to the containers using tcset (The unit of bandwidth is Mbps)
 ```console
 cd ~/autothrottle/script
 N=`getconf _NPROCESSORS_ONLN`
