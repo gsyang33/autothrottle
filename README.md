@@ -138,8 +138,18 @@ make test
 make install
 ```
 
-- Install memaslap in the remote machine (Please refer to https://github.com/pgaref/memcached_benc for more information)
+- Install memaslap in the remote machine (Please refer to https://github.com/pgaref/memcached_bench for more information. Note that the remote machine should run Ubutu 16.04.)
 ```console
+cd ~
+apt-get update
+apt-get install -y build-essential git wget vim libevent-dev
+wget http://memcached.org/files/old/memcached-1.4.14.tar.gz
+tar vxf memcached-1.4.14.tar.gz
+cd memcached-1.4.14
+./configure --prefix=/usr/local/memcached
+make
+make test
+make install
 cd ~
 git clone https://github.com/pgaref/memcached_bench.git
 cd ~/memcached_bench/libmemcached-1.0.15/
