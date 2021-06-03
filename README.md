@@ -29,6 +29,9 @@ cp -rf ./bridge/* ~/linux-5.4.58/net/bridge/
 cp -rf ./sched/* ~/linux-5.4.58/kernel/sched/
 cd ~/linux-5.4.58
 cp /boot/config-$(uname -r) ./.config
+```
+*Note that CONFIG_BRIDGE_IGMP_SNOOPING should not be set (e.g., in .config, comment CONFIG_BRIDGE_IGMP_SNOOPING)
+```console
 make olddefconfig
 N=`getconf _NPROCESSORS_ONLN`
 make -j$N
