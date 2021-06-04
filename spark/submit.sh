@@ -9,7 +9,7 @@ START_TIME=`date +%s`
 docker run -v $(pwd)/apps:/opt/spark-apps \
 --name spark-submit \
 --hostname spark-submit \
---network dockersparkterasort_br-n-spark \
+--network spark_br-n-spark \
 --env SPARK_APPLICATION_JAR_LOCATION=$SPARK_APPLICATION_JAR_LOCATION \
 --env SPARK_APPLICATION_MAIN_CLASS=$SPARK_APPLICATION_MAIN_CLASS \
 --env SPARK_DRIVER_HOST=10.0.0.202 \
