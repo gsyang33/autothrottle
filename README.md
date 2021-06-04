@@ -193,9 +193,9 @@ a. Network setup (On every host machine)
 	b. Data setup (On four master servers)
 	- Create folders for input/output data.
 	```console
-	cd ~/apps
+	cd ~/autothrottle/spark/apps
 	mkdir data
-	cd ~/apps/data
+	cd ./data
 	mkdir terasort_in terasort_out
 	```
 	- Download input data to the folder terasort_in by following the instructions at: https://github.com/ehiggs/spark-terasort
@@ -221,18 +221,18 @@ a. Network setup (On every host machine)
 	```
 
 	- Configure master and slave container settings (On four master servers)
-		```console
-		vim ./master.yml
-		```
-		*Here, set each spark-worker (underneath extra_hosts) to the local IP address of the corresponding worker container. Set SPARK_PUBLIC_DNS (underneath environment) to the public IP address of the target machine.
-		```console
-		vim ./slave.yml
-		```
-		*Here, set spark-master (underneath extra_hosts) to the public IP address of the corresponding master server.
-		Note that two yml files (e.g., slaves1.yml, slaves2.yml) are necessary to create two slave containers in the master server.
+	```console
+	vim ./master.yml
+	```
+	*Here, set each spark-worker (underneath extra_hosts) to the local IP address of the corresponding worker container. Set SPARK_PUBLIC_DNS (underneath environment) to the public IP address of the target machine.
+	```console
+	vim ./slave.yml
+	```
+	*Here, set spark-master (underneath extra_hosts) to the public IP address of the corresponding master server.
+	Note that two yml files (e.g., slaves1.yml, slaves2.yml) are necessary to create two slave containers in the master server.
 
 	- Configure containers in the target machine: We create eight containers (i.e., spark slaves) in the target machine and every two slaves belong to the same master (e.g., s1 and s2 belong to m1 while s3 and s4 belong to m2 when m1 and m2 run on different master servers.) 
-		- So, we need to create eight slaves.yml (e.g., s1.yml, s2.yml….) as in the master servers. Also, each yml file should include spark-master and spark-worker IP addresses with IP address of the corresponding master server.
+	- So, we need to create eight slaves.yml (e.g., s1.yml, s2.yml….) as in the master servers. Also, each yml file should include spark-master and spark-worker IP addresses with IP address of the corresponding master server.
 
 	d. Running Spark
 	- Deploy and run master and slave containers (On four master servers).
@@ -244,6 +244,7 @@ a. Network setup (On every host machine)
 	
 	- Deploy eight slave containers in the target machine.
 	```console
+	chmod +x ./start_slave.sh
 	./start_slave.sh
 	```
 	
