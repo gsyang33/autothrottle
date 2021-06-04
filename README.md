@@ -173,7 +173,7 @@ sudo route add -net $NET dev $IFACE
 ## 2) Spark
 - This evaluation requires five servers connected using a 10 GbE switch. Among five servers, four servers act as master servers while one left is a target machine.
 
-a. Network setup (On every host machine)
+	a. Network setup (On every host machine)
 	- Create a local docker bridge network “dockersparkterasort_br-n-spark” with the first 24 bits subnet address $NET (e.g., 172.35.0 for 172.35.0.0/16, each machine should bave different subnet addresses). (Please refer to Https://docs.docker.com/engine/reference/commandline/network_create/ for more information)
 	```console
 	cd ~/autothrottle/script
@@ -191,7 +191,7 @@ a. Network setup (On every host machine)
 	./route.sh $IF
 	```
 		
-b. Data setup (On four master servers)
+	b. Data setup (On four master servers)
 	- Create folders for input/output data.
 	```console
 	cd ~/autothrottle/spark/apps
@@ -201,7 +201,7 @@ b. Data setup (On four master servers)
 	```
 	- Download input data to the folder terasort_in by following the instructions at: https://github.com/ehiggs/spark-terasort
 	 
-c. Container setup
+	c. Container setup
 	- Spark master container configuration (On four master servers)
 	```console 
 	cd ~/autothrottle/spark/docker/spark-submit
@@ -232,7 +232,7 @@ c. Container setup
 	- Configure containers in the target machine: We create eight containers (i.e., spark slaves) in the target machine and every two slaves belong to the same master (e.g., s1 and s2 belong to m1 while s3 and s4 belong to m2 when m1 and m2 run on different master servers.) 
 	- So, we need to create eight slaves.yml (e.g., s1.yml, s2.yml….) as in the master servers. Also, each yml file should include spark-master and spark-worker IP addresses with IP address of the corresponding master server.
 
-d. Running Spark
+	d. Running Spark
 	- Deploy and run master and slave containers (On four master servers).
 	```console
 	cd ~/autothrottle/spark
