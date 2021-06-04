@@ -172,6 +172,7 @@ sudo route add -net $NET dev $IFACE
 	
 ## 2) Spark
 - This evaluation requires five servers connected using a 10 GbE switch. Among five servers, four servers act as master servers while one left is a target machine.
+
 a. Network setup (On every host machine)
 	- Create a local docker bridge network “dockersparkterasort_br-n-spark” with the first 24 bits subnet address $NET (e.g., 172.35.0 for 172.35.0.0/16, each machine should bave different subnet addresses). (Please refer to Https://docs.docker.com/engine/reference/commandline/network_create/ for more information)
 	```console
@@ -212,14 +213,12 @@ c. Container setup
 	vim ./start-master.sh
 	```
 	*Here, set SPARK_MASTER_HOST to the IP address of the master server
-	
 	- Build Docker container images (On every host servers)
 	```console  
 	cd ~/autothrottle/spark
 	chmod +x ./build-images.sh
 	./build-images.sh
 	```
-
 	- Configure master and slave container settings (On four master servers)
 	```console
 	vim ./master.yml
@@ -230,7 +229,6 @@ c. Container setup
 	```
 	*Here, set spark-master (underneath extra_hosts) to the public IP address of the corresponding master server.
 	Note that two yml files (e.g., slaves1.yml, slaves2.yml) are necessary to create two slave containers in the master server.
-
 	- Configure containers in the target machine: We create eight containers (i.e., spark slaves) in the target machine and every two slaves belong to the same master (e.g., s1 and s2 belong to m1 while s3 and s4 belong to m2 when m1 and m2 run on different master servers.) 
 	- So, we need to create eight slaves.yml (e.g., s1.yml, s2.yml….) as in the master servers. Also, each yml file should include spark-master and spark-worker IP addresses with IP address of the corresponding master server.
 
@@ -241,19 +239,16 @@ d. Running Spark
 	chmod +x ./start_master.sh
 	./start_master.sh
 	```
-	
 	- Deploy eight slave containers in the target machine.
 	```console
 	chmod +x ./start_slave.sh
 	./start_slave.sh
 	```
-	
 	- Submit workload to cluster (On four master servers).
 	```console
 	vim submit.sh
 	```
 	*Here, set SPARK_DRIVER_HOST to the IP address of the master server.
-	
 	```console
 	chmod +x ./submit.sh
 	./submit.sh
