@@ -23,7 +23,7 @@ We utilize two hardware configurations for Micro- and Macro-benchmark evaluation
 cd ~
 wget https://mirrors.edge.kernel.org/pub/linux/kernel/v5.x/linux-5.4.58.tar.gz
 tar xzvf linux-5.4.58.tar.gz
-git clone
+git clone https://github.com/may21/autothrottle.git
 cd autothrottle
 cp -rf ./bridge/* ~/linux-5.4.58/net/bridge/
 cp -rf ./sched/* ~/linux-5.4.58/kernel/sched/
@@ -190,7 +190,7 @@ a. Network setup (On every host machine)
 	./route.sh $IF
 	```
 		
-	b. Data setup (On four master servers)
+b. Data setup (On four master servers)
 	- Create folders for input/output data.
 	```console
 	cd ~/autothrottle/spark/apps
@@ -200,7 +200,7 @@ a. Network setup (On every host machine)
 	```
 	- Download input data to the folder terasort_in by following the instructions at: https://github.com/ehiggs/spark-terasort
 	 
-	c. Container setup
+c. Container setup
 	- Spark master container configuration (On four master servers)
 	```console 
 	cd ~/autothrottle/spark/docker/spark-submit
@@ -234,7 +234,7 @@ a. Network setup (On every host machine)
 	- Configure containers in the target machine: We create eight containers (i.e., spark slaves) in the target machine and every two slaves belong to the same master (e.g., s1 and s2 belong to m1 while s3 and s4 belong to m2 when m1 and m2 run on different master servers.) 
 	- So, we need to create eight slaves.yml (e.g., s1.yml, s2.yml….) as in the master servers. Also, each yml file should include spark-master and spark-worker IP addresses with IP address of the corresponding master server.
 
-	d. Running Spark
+d. Running Spark
 	- Deploy and run master and slave containers (On four master servers).
 	```console
 	cd ~/autothrottle/spark
